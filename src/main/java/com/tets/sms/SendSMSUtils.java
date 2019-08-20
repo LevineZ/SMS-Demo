@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class SendSMSUtils {
     public static final int appid = 1400239070;
-    public static final String appkey = "6dc551802025200199b61a752f7a447e";
+    public static final String appkey = "";
     public static final int templateId = 389849;
     public static final String smsSign = "";
     String url = "https://yun.tim.qq.com/v5/tlssmssvr/sendsms";
