@@ -1,11 +1,14 @@
 package com.tets.sms;
 
-import com.github.qcloudsms.*;
+import com.github.qcloudsms.SmsMobileStatusPuller;
+import com.github.qcloudsms.SmsSingleSender;
+import com.github.qcloudsms.SmsSingleSenderResult;
+import com.github.qcloudsms.SmsStatusPullCallbackResult;
 import com.github.qcloudsms.httpclient.HTTPException;
 import org.json.JSONException;
-import com.github.qcloudsms.SmsMobileStatusPuller;
-import com.github.qcloudsms.SmsStatusPullCallbackResult;
+
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.Random;
 
 public class SendSMSUtils {
@@ -19,24 +22,25 @@ public class SendSMSUtils {
     static String phoneNumber3 = "15510805093";
 
     public static void main(String[] args) {
+
         try {
 //            int beginTime = 1565775745;  // 开始时间（UNIX timestamp）
 //            int endTime = 1565785745;    // 结束时间（UNIX timestamp）
             int maxNum = 10;             // 单次拉取最大量
-            long beginTime=(System.currentTimeMillis()/1000)-30l;
-            long endTime=beginTime+300L;
-            String[] phoneNumbers={phoneNumber1,phoneNumber2,phoneNumber3};
-            String str="";
-            Random random=new Random();
+            long beginTime = (System.currentTimeMillis() / 1000)-300;
+            long endTime = beginTime + 300L;
+            String[] phoneNumbers = {phoneNumber1, phoneNumber2, phoneNumber3};
+            String str = "";
+            Random random = new Random();
             for (int i = 0; i < 6; i++) {
                 str += random.nextInt(10);
             }
             String[] params = {str};
-            SmsSingleSender ssender = new SmsSingleSender(appid,appkey);       //单发
+            //短信单发/群发/指定模板。。。。
+            SmsSingleSender ssender = new SmsSingleSender(appid, appkey);       //单发
             SmsSingleSenderResult result = ssender.sendWithParam("86", "17726055317", templateId, params, smsSign, "", "");
-            //System.out.println(result);
-            System.out.println("短信验证码为"+str);
-
+            System.out.println(result);
+            System.out.println("短信验证码为" + str);
             // 拉取短信回执
             SmsMobileStatusPuller mspuller = new SmsMobileStatusPuller(appid, appkey);
             SmsStatusPullCallbackResult callbackResult = mspuller.pullCallback("86", phoneNumbers[0], beginTime, endTime, maxNum);
@@ -52,6 +56,8 @@ public class SendSMSUtils {
             // 网络 IO 错误
             e.printStackTrace();
         }
-
+        Connection con = TestJsonDateToMysql.getconnect();
+        new TestJsonDateToMysql(con);
     }
+
 }
